@@ -11,6 +11,7 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -32,10 +33,13 @@ import kotlinx.coroutines.launch
 class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
     private val viewModel: TaskViewModel by viewModels()
     lateinit var searchView: SearchView
+    private val args: TaskFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTasksBinding.bind(view)
+
+        val listId = args.listItem.listId
 
         val taskAdapter = TasksAdapter(this)
 
@@ -89,12 +93,12 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
                     }
 
                     is TaskViewModel.TaskEvent.NavigateToAddTaskScreen -> {
-                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null, "Add Task")
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null, "Add Task", listId = listId)
                         findNavController().navigate(action)
                     }
 
                     is TaskViewModel.TaskEvent.NavigateToEditTaskScreen -> {
-                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task, "Edit Task")
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task, "Edit Task", listId = listId)
                         findNavController().navigate(action)
                     }
 

@@ -9,9 +9,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import javax.inject.Provider
 
-@Database(entities = [Task::class], version = 1)
+@Database(entities = [Task::class, ListItem::class], version = 1)
 abstract class TaskDatabase: RoomDatabase() {
     abstract fun taskDao(): TaskDao
+    abstract fun listDao(): ListDao
 
     class Callback @Inject constructor(
         private val database: Provider<TaskDatabase>,
@@ -20,17 +21,26 @@ abstract class TaskDatabase: RoomDatabase() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
 
-            val dao = database.get().taskDao()
+            val taskDao = database.get().taskDao()
+            val listDao = database.get().listDao()
 
             applicationScope.launch {
-                dao.insert(Task("Wash the dishes"))
-                dao.insert(Task("Do the laundry"))
-                dao.insert(Task("Buy groceries", important = true))
-                dao.insert(Task("Prepare food", completed = true))
-                dao.insert(Task("Call mom"))
-                dao.insert(Task("Visit grandma", completed = true))
-                dao.insert(Task("Repair my bike"))
-                dao.insert(Task("Call Elon Musk"))
+                listDao.insertList(ListItem("Groceries"))
+                listDao.insertList(ListItem("Today's Tasks"))
+                listDao.insertList(ListItem("Productivity"))
+                listDao.insertList(ListItem("Good Things"))
+                listDao.insertList(ListItem("Points to remember"))
+                listDao.insertList(ListItem("Baby Names"))
+                listDao.insertList(ListItem("Bucket List"))
+
+                taskDao.insert(Task(listId = 1,"Wash the dishes"))
+                taskDao.insert(Task(listId = 1,"Do the laundry"))
+                taskDao.insert(Task(listId = 1,"Buy groceries", important = true))
+                taskDao.insert(Task(listId = 1,"Prepare food", completed = true))
+                taskDao.insert(Task(listId = 1,"Call mom"))
+                taskDao.insert(Task(listId = 1,"Visit grandma", completed = true))
+                taskDao.insert(Task(listId = 2,"Repair my bike"))
+                taskDao.insert(Task(listId = 3,"Call Elon Musk"))
             }
         }
     }

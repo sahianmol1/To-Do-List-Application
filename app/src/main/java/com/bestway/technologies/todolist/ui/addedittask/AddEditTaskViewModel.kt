@@ -32,6 +32,8 @@ class AddEditTaskViewModel @ViewModelInject constructor(
             state.set("taskImportance", value)
         }
 
+    val listId = state.get<Int>("listId") ?: 1
+
     private val addEditEventChannel = Channel<AddEditTaskEvent>()
     val addEditEvent = addEditEventChannel.receiveAsFlow()
 
@@ -45,7 +47,7 @@ class AddEditTaskViewModel @ViewModelInject constructor(
             val updatedTask = task.copy(name = taskName, important = taskImportance)
             updateTask(updatedTask)
         } else {
-            val newTask = Task(name = taskName, important = taskImportance)
+            val newTask = Task(listId = listId, name = taskName, important = taskImportance)
             createTask(newTask)
         }
     }

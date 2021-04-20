@@ -1,6 +1,5 @@
 package com.bestway.technologies.todolist.di
 
-import android.content.ComponentCallbacks
 import android.content.Context
 import androidx.room.Room
 import com.bestway.technologies.todolist.data.TaskDatabase
@@ -32,6 +31,10 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTaskDao(taskDatabase: TaskDatabase) = taskDatabase.taskDao()
+
+    @Provides
+    @Singleton
+    fun provideListDao(db: TaskDatabase) = db.listDao()
 
     @ApplicationScope
     @Provides

@@ -10,6 +10,7 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.bestway.technologies.todolist.R
 import com.bestway.technologies.todolist.databinding.FragmentAddEditTaskBinding
 import com.bestway.technologies.todolist.util.exhaustive
@@ -21,6 +22,7 @@ import kotlinx.coroutines.flow.collect
 class AddEditTaskFragment: Fragment(R.layout.fragment_add_edit_task) {
 
     private val viewModel: AddEditTaskViewModel by viewModels()
+    private val args: AddEditTaskFragmentArgs by navArgs()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

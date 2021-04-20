@@ -3,16 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/taskFragment">
+    app:startDestination="@id/listFragment">
 
     <fragment
         android:id="@+id/taskFragment"
         android:name="com.bestway.technologies.todolist.ui.tasks.TaskFragment"
-        android:label="Tasks"
+        android:label="{title}"
         tools:layout="@layout/fragment_tasks">
         <action
             android:id="@+id/action_taskFragment_to_addEditTaskFragment"
             app:destination="@id/addEditTaskFragment" />
+        <argument
+            android:name="listItem"
+            app:argType="com.bestway.technologies.todolist.data.ListItem" />
+        <argument
+            android:name="title"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/addEditTaskFragment"
@@ -27,6 +33,9 @@
         <argument
             android:name="title"
             app:argType="string" />
+        <argument
+            android:name="listId"
+            app:argType="integer" />
     </fragment>
     <dialog
         android:id="@+id/deleteAllCompletedDialogFragment"
@@ -35,4 +44,13 @@
     <action
         android:id="@+id/action_global_deleteAllCompletedDialogFragment"
         app:destination="@id/deleteAllCompletedDialogFragment" />
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.bestway.technologies.todolist.ui.lists.ListFragment"
+        android:label="All Lists"
+        tools:layout="@layout/fragment_list" >
+        <action
+            android:id="@+id/action_listFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+    </fragment>
 </navigation>

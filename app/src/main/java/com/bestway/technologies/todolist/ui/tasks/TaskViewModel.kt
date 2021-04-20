@@ -3,6 +3,7 @@ package com.bestway.technologies.todolist.ui.tasks
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.bestway.technologies.todolist.data.ListItem
 import com.bestway.technologies.todolist.data.PreferencesManager
 import com.bestway.technologies.todolist.data.SortOrder
 import com.bestway.technologies.todolist.data.Task
@@ -11,7 +12,6 @@ import com.bestway.technologies.todolist.ui.ADD_TASK_RESULT_OK
 import com.bestway.technologies.todolist.ui.EDIT_TASK_RESULT_OK
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,6 +28,10 @@ class TaskViewModel @ViewModelInject constructor(
     val searchQuery = state.getLiveData("searchQuery", "")
     val preferencesFlow = preferencesManager.preferencesFlow
 
+    val listItem = state.get<ListItem>("listItem")
+
+    val listId = listItem?.listId
+
     private val taskEventChannel = Channel<TaskEvent>()
     val taskEvent = taskEventChannel.receiveAsFlow()
 
@@ -40,7 +44,8 @@ class TaskViewModel @ViewModelInject constructor(
         repository.getAllTasks(
             searchQuery,
             filterPreferences.sortOrder,
-            filterPreferences.hideCompleted
+            filterPreferences.hideCompleted,
+                listId ?: 1
         )
     }
 
