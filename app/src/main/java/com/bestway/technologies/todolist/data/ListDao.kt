@@ -17,4 +17,7 @@ interface ListDao {
 
     @Delete
     suspend fun delete(list: ListItem)
+
+    @Query("SELECT * FROM list_table ORDER BY created DESC LIMIT 1")
+    suspend fun getTopListItem(): ListItem
 }

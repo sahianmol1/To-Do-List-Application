@@ -53,4 +53,13 @@
             android:id="@+id/action_listFragment_to_taskFragment"
             app:destination="@id/taskFragment" />
     </fragment>
+    <dialog
+        android:id="@+id/addListItemDialogFragment"
+        android:name="com.bestway.technologies.todolist.ui.addlistitem.AddListItemDialogFragment"
+        android:label="AddListItemDialogFragment" >
+        <action
+            android:id="@+id/action_addListItemDialogFragment_to_taskFragment"
+            app:destination="@id/taskFragment" />
+    </dialog>
+    <action android:id="@+id/action_global_addListItemDialogFragment" app:destination="@id/addListItemDialogFragment" />
 </navigation>

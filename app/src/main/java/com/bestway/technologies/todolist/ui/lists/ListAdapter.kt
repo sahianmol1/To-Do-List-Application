@@ -30,6 +30,15 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
                         listener.onListItemClick(listItem)
                     }
                 }
+
+                root.setOnLongClickListener {
+                    val position = adapterPosition
+                    if (position != RecyclerView.NO_POSITION) {
+                        val listItem = getItem(position)
+                        listener.onLongClickListener(listItem)
+                    }
+                    false
+                }
             }
         }
 
@@ -50,6 +59,7 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
 
     interface OnListItemClickListener {
         fun onListItemClick(list: ListItem)
+        fun onLongClickListener(list: ListItem)
     }
 
 }

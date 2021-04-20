@@ -1,9 +1,6 @@
 package com.bestway.technologies.todolist.repositorry
 
-import com.bestway.technologies.todolist.data.ListDao
-import com.bestway.technologies.todolist.data.SortOrder
-import com.bestway.technologies.todolist.data.Task
-import com.bestway.technologies.todolist.data.TaskDao
+import com.bestway.technologies.todolist.data.*
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -29,4 +26,10 @@ class TodoRepository @Inject constructor(private val taskDao: TaskDao, private v
     suspend fun deleteAllCompleted() = taskDao.deleteAllCompleted()
 
     fun getAllListItems() = listDao.getAllListItems()
+
+    suspend fun deleteList(list: ListItem) = listDao.delete(list)
+
+    suspend fun insertList(list: ListItem) = listDao.insertList(list)
+
+    suspend fun getTopListItem() = listDao.getTopListItem()
 }

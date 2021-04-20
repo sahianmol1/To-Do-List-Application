@@ -23,5 +23,19 @@ class ListViewModel @ViewModelInject constructor(private val repository: TodoRep
 
     sealed class ListEvent {
         data class NavigateToTaskFragmentScreen(val list: ListItem): ListEvent()
+        data class ShowDeleteAlertDialog(val list: ListItem): ListEvent()
+        object OpenAddListItemDialog: ListEvent()
+    }
+
+    fun onDeleteButtonClick(list: ListItem) = viewModelScope.launch {
+        repository.deleteList(list)
+    }
+
+    fun onAddNewListClick() = viewModelScope.launch {
+        listEventChannel.send(ListEvent.OpenAddListItemDialog)
+    }
+
+    fun onLongClickListener(list: ListItem) = viewModelScope.launch {
+        listEventChannel.send(ListEvent.ShowDeleteAlertDialog(list))
     }
 }
