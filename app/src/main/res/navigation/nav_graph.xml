@@ -47,7 +47,7 @@
     <fragment
         android:id="@+id/listFragment"
         android:name="com.bestway.technologies.todolist.ui.lists.ListFragment"
-        android:label="All Lists"
+        android:label="My Lists"
         tools:layout="@layout/fragment_list" >
         <action
             android:id="@+id/action_listFragment_to_taskFragment"

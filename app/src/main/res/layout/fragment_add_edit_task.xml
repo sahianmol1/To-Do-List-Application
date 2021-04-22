@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".ui.addedittask.AddEditTaskFragment">
 
     <LinearLayout
@@ -16,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Task name"
-            android:inputType="text" />
+            android:inputType="textCapSentences" />
 
         <CheckBox
             android:id="@+id/check_box_important"
@@ -38,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="16dp"
+        app:tint="@color/white"
         android:src="@drawable/ic_check_mark" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

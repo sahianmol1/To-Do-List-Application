@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
 
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
-class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
+class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickListener {
     private val viewModel: TaskViewModel by viewModels()
     lateinit var searchView: SearchView
     private val args: TaskFragmentArgs by navArgs()
@@ -51,11 +51,11 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
             }
 
             ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
+                    ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
                 override fun onMove(
-                    recyclerView: RecyclerView,
-                    viewHolder: RecyclerView.ViewHolder,
-                    target: RecyclerView.ViewHolder
+                        recyclerView: RecyclerView,
+                        viewHolder: RecyclerView.ViewHolder,
+                        target: RecyclerView.ViewHolder
                 ): Boolean {
                     return false
                 }
@@ -72,20 +72,31 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
             }
         }
 
-        setFragmentResultListener("add_edit_request") {_, bundle ->
+        setFragmentResultListener("add_edit_request") { _, bundle ->
             val result = bundle.getInt("add_edit_result")
             viewModel.onAddEditResult(result)
         }
 
-        lifecycleScope.launch{
+        lifecycleScope.launch {
             viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-                taskAdapter.submitList(tasks)
+
+                when (tasks.isEmpty()) {
+                    true -> {
+                        binding.apply {
+                            textViewStartAddingTasks.visibility = View.VISIBLE
+                            imageRightArrow.visibility = View.VISIBLE
+                        }
+                    }
+                    false -> {
+                        taskAdapter.submitList(tasks)
+                    }
+                }
             }
         }
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.taskEvent.collect { event ->
-                when(event) {
+                when (event) {
                     is TaskViewModel.TaskEvent.SowUndoDeleteTaskMessage -> {
                         Snackbar.make(requireView(), "Task Deleted", Snackbar.LENGTH_LONG).setAction("UNDO") {
                             viewModel.onUndoDeleteClick(event.task)
@@ -135,12 +146,12 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
 
         viewLifecycleOwner.lifecycleScope.launch {
             menu.findItem(R.id.action_hide_completed_tasks).isChecked =
-                viewModel.preferencesFlow.first().hideCompleted
+                    viewModel.preferencesFlow.first().hideCompleted
         }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_sort_by_name -> {
                 viewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
@@ -148,6 +159,11 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
 
             R.id.action_sort_by_date_created -> {
                 viewModel.onSortOrderSelected(SortOrder.BY_DATE)
+                true
+            }
+
+            R.id.action_sort_by_oldest_first -> {
+                viewModel.onSortOrderSelected(SortOrder.BY_OLDEST)
                 true
             }
 
@@ -159,6 +175,10 @@ class TaskFragment: Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClickL
 
             R.id.action_delete_all_completed_tasks -> {
                 viewModel.onDeleteAllCompletedClick()
+                true
+            }
+
+            R.id.action_alarm -> {
                 true
             }
             else -> super.onOptionsItemSelected(item)

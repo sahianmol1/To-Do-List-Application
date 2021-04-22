@@ -25,7 +25,7 @@ class TodoRepository @Inject constructor(private val taskDao: TaskDao, private v
 
     suspend fun deleteAllCompleted() = taskDao.deleteAllCompleted()
 
-    fun getAllListItems() = listDao.getAllListItems()
+    fun getAllListItems(searchQuery: String, sortOrder: SortOrder) = listDao.getAllListItems(searchQuery, sortOrder)
 
     suspend fun deleteList(list: ListItem) = listDao.delete(list)
 

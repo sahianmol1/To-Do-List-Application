@@ -6,8 +6,21 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ListDao {
 
-    @Query("SELECT * FROM list_table ORDER BY created DESC")
-    fun getAllListItems(): Flow<List<ListItem>>
+    fun getAllListItems(searchQuery: String, sortOrder: SortOrder): Flow<List<ListItem>> =
+            when(sortOrder) {
+                SortOrder.BY_DATE -> { getTasksSortedByDate(searchQuery) }
+                SortOrder.BY_NAME -> { getTasksSortedByName(searchQuery) }
+                SortOrder.BY_OLDEST -> {getOldestFirst(searchQuery)}
+            }
+
+    @Query("SELECT * FROM list_table WHERE name LIKE '%' || :searchQuery || '%' ORDER BY name")
+    fun getTasksSortedByName(searchQuery: String): Flow<List<ListItem>>
+
+    @Query("SELECT * FROM list_table WHERE name LIKE '%' || :searchQuery || '%' ORDER BY created DESC")
+    fun getTasksSortedByDate(searchQuery: String): Flow<List<ListItem>>
+
+    @Query("SELECT * FROM list_table WHERE name LIKE '%' || :searchQuery || '%' ORDER BY created")
+    fun getOldestFirst(searchQuery: String): Flow<List<ListItem>>
 
     @Insert
     suspend fun insertList(list: ListItem)

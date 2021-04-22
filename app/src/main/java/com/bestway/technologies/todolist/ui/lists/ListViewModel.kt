@@ -1,30 +1,49 @@
 package com.bestway.technologies.todolist.ui.lists
 
+import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.bestway.technologies.todolist.data.ListItem
+import com.bestway.technologies.todolist.data.ListPreferencesManager
+import com.bestway.technologies.todolist.data.SortOrder
 import com.bestway.technologies.todolist.repositorry.TodoRepository
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
-class ListViewModel @ViewModelInject constructor(private val repository: TodoRepository): ViewModel() {
+class ListViewModel @ViewModelInject constructor(
+        private val repository: TodoRepository,
+        private val preferencesManager: ListPreferencesManager,
+        @Assisted private val state: SavedStateHandle
+) : ViewModel() {
 
-    fun getAllListItems() = repository.getAllListItems().asLiveData()
+    val searchQuery = state.getLiveData("searchQuery", "")
+    val preferencesFlow = preferencesManager.preferencesFlow
 
     private val listEventChannel = Channel<ListEvent>()
     val listEvent = listEventChannel.receiveAsFlow()
+
+    private val listFlow = combine(
+            searchQuery.asFlow(),
+            preferencesFlow
+    ) {searchQuery, sortOrder ->
+        Pair(searchQuery, sortOrder)
+    }.flatMapLatest { (searchQuery, sortOrder) ->
+        repository.getAllListItems(searchQuery, sortOrder)
+    }
+
+    val list = listFlow.asLiveData()
 
     fun onListItemClick(list: ListItem) = viewModelScope.launch {
         listEventChannel.send(ListEvent.NavigateToTaskFragmentScreen(list))
     }
 
     sealed class ListEvent {
-        data class NavigateToTaskFragmentScreen(val list: ListItem): ListEvent()
-        data class ShowDeleteAlertDialog(val list: ListItem): ListEvent()
-        object OpenAddListItemDialog: ListEvent()
+        data class NavigateToTaskFragmentScreen(val list: ListItem) : ListEvent()
+        data class ShowDeleteAlertDialog(val list: ListItem) : ListEvent()
+        object OpenAddListItemDialog : ListEvent()
     }
 
     fun onDeleteButtonClick(list: ListItem) = viewModelScope.launch {
@@ -37,5 +56,9 @@ class ListViewModel @ViewModelInject constructor(private val repository: TodoRep
 
     fun onLongClickListener(list: ListItem) = viewModelScope.launch {
         listEventChannel.send(ListEvent.ShowDeleteAlertDialog(list))
+    }
+
+    fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
+        preferencesManager.updateSortOrder(sortOrder)
     }
 }
