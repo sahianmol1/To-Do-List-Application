@@ -14,29 +14,35 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class AddListItemDialogFragment: DialogFragment() {
+class AddListItemDialogFragment : DialogFragment() {
     private val viewModel: AddListItemViewModel by viewModels()
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog  {
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
 
 
         val customDialogView = layoutInflater.inflate(R.layout.layout_list_add_dialog, null)
         val editText = customDialogView.findViewById<TextInputEditText>(R.id.text_input_add_list)
 
         return AlertDialog.Builder(requireContext())
-                 .setTitle("Add New List")
-                 .setView(customDialogView)
-                 .setPositiveButton("Add") { _, _ ->
-                     val listName: String = editText.text.toString()
-                     viewModel.addNewList(ListItem(name = listName))
-                     lifecycleScope.launch {
-                         val listItem = viewModel.getTopListItem()
-                         val action = AddListItemDialogFragmentDirections.actionAddListItemDialogFragmentToTaskFragment(listItem = listItem, title = listItem.name)
-                         findNavController().navigate(action)
-                     }
-                 }
-                 .setNegativeButton("Cancel", null)
-                 .create()
+                .setTitle("Add New List")
+                .setView(customDialogView)
+                .setPositiveButton("Add") { _, _ ->
+                    val listName: String = editText.text.toString()
+
+                    viewModel.addNewList(ListItem(name = listName))
+
+                    viewModel.listId.observe(this@AddListItemDialogFragment) {
+                        if (it != null) {
+                            lifecycleScope.launch {
+                                val listItem = viewModel.getListItem(it.toInt())
+                                val action = AddListItemDialogFragmentDirections.actionAddListItemDialogFragmentToTaskFragment(listItem = listItem, title = listItem.name)
+                                findNavController().navigate(action)
+                            }
+                        }
+                    }
+                }
+                .setNegativeButton("Cancel", null)
+                .create()
     }
 
 }

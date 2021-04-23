@@ -23,7 +23,7 @@
         android:layout_gravity="bottom|end" />
 
     <TextView
-        android:id="@+id/text_view_start_adding_tasks"
+        android:id="@+id/text_view_start_adding_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Start by adding a new list"
@@ -33,7 +33,7 @@
         android:fontFamily="sans-serif-medium" />
 
     <ImageView
-        android:id="@+id/image_right_arrow"
+        android:id="@+id/image_right_arrow_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_baseline_arrow_forward_24"

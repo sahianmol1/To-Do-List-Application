@@ -49,11 +49,17 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
                 when(it.isEmpty()) {
                     true -> {
                         binding.apply {
-                            textViewStartAddingTasks.visibility = View.VISIBLE
-                            imageRightArrow.visibility = View.VISIBLE
+                            textViewStartAddingList.visibility = View.VISIBLE
+                            imageRightArrowList.visibility = View.VISIBLE
                         }
                     }
-                    false -> { listAdapter.submitList(it) }
+                    false -> {
+                        binding.apply {
+                            textViewStartAddingList.visibility = View.GONE
+                            imageRightArrowList.visibility = View.GONE
+                        }
+                        listAdapter.submitList(it)
+                    }
                 }
             }
         }

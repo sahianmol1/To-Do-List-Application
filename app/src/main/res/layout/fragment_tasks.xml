@@ -25,7 +25,7 @@
         android:id="@+id/text_view_start_adding_tasks"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Start by adding a new task"
+        android:text="Add your first task"
         android:layout_gravity="center"
         android:textSize="16sp"
         android:visibility="gone"

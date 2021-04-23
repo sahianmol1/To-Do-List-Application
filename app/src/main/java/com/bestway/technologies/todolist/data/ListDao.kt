@@ -23,7 +23,7 @@ interface ListDao {
     fun getOldestFirst(searchQuery: String): Flow<List<ListItem>>
 
     @Insert
-    suspend fun insertList(list: ListItem)
+    suspend fun insertList(list: ListItem): Long
 
     @Update
     suspend fun update(list: ListItem)
@@ -33,4 +33,7 @@ interface ListDao {
 
     @Query("SELECT * FROM list_table ORDER BY created DESC LIMIT 1")
     suspend fun getTopListItem(): ListItem
+
+    @Query("SELECT * FROM list_table WHERE listId = :listId")
+    suspend fun getListItem(listId: Int): ListItem
 }

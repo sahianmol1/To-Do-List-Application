@@ -88,6 +88,10 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
                         }
                     }
                     false -> {
+                        binding.apply {
+                            textViewStartAddingTasks.visibility = View.GONE
+                            imageRightArrow.visibility = View.GONE
+                        }
                         taskAdapter.submitList(tasks)
                     }
                 }
