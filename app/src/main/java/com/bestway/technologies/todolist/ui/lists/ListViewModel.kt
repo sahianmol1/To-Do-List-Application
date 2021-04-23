@@ -54,7 +54,7 @@ class ListViewModel @ViewModelInject constructor(
         listEventChannel.send(ListEvent.OpenAddListItemDialog)
     }
 
-    fun onLongClickListener(list: ListItem) = viewModelScope.launch {
+    fun onDeleteMenuClick(list: ListItem) = viewModelScope.launch {
         listEventChannel.send(ListEvent.ShowDeleteAlertDialog(list))
     }
 

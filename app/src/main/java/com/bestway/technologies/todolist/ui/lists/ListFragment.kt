@@ -2,10 +2,7 @@ package com.bestway.technologies.todolist.ui.lists
 
 import android.app.AlertDialog
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -27,6 +24,7 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
 
     private val viewModel: ListViewModel by viewModels()
     lateinit var searchView: SearchView
+    lateinit var toBeDeletedListItem: ListItem
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -140,7 +138,23 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
         viewModel.onListItemClick(list)
     }
 
-    override fun onLongClickListener(list: ListItem) {
-        viewModel.onLongClickListener(list)
+    override fun onCreateContextMenuListener(view: View, list: ListItem) {
+        toBeDeletedListItem = list
+        registerForContextMenu(view)
+    }
+
+    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        activity?.menuInflater?.inflate(R.menu.menu_delete_list, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
+            R.id.action_delete_list -> {
+                viewModel.onDeleteMenuClick(toBeDeletedListItem)
+                true
+            }
+            else -> super.onContextItemSelected(item)
+        }
     }
 }

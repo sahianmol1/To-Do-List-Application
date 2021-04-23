@@ -1,6 +1,7 @@
 package com.bestway.technologies.todolist.ui.lists
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -23,6 +24,7 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
 
         init {
             binding.apply {
+
                 root.setOnClickListener {
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
@@ -35,7 +37,7 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
                     val position = adapterPosition
                     if (position != RecyclerView.NO_POSITION) {
                         val listItem = getItem(position)
-                        listener.onLongClickListener(listItem)
+                        listener.onCreateContextMenuListener(root, listItem)
                     }
                     false
                 }
@@ -59,7 +61,7 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
 
     interface OnListItemClickListener {
         fun onListItemClick(list: ListItem)
-        fun onLongClickListener(list: ListItem)
+        fun onCreateContextMenuListener(view: View, list: ListItem)
     }
 
 }
