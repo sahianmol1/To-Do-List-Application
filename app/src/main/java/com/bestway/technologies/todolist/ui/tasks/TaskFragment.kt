@@ -77,6 +77,11 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
             viewModel.onAddEditResult(result)
         }
 
+        setFragmentResultListener("time_picker_request") {_, bundle ->
+            val result = bundle.getInt("time_picker_result")
+            viewModel.onSetTimerResult(result)
+        }
+
         lifecycleScope.launch {
             viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
 
@@ -124,6 +129,13 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
                     is TaskViewModel.TaskEvent.NavigateToDeleteAllCompletedClick -> {
                         val action = TaskFragmentDirections.actionGlobalDeleteAllCompletedDialogFragment()
                         findNavController().navigate(action)
+                    }
+                    is TaskViewModel.TaskEvent.NavigateToTimePickerFragment -> {
+                        val action = TaskFragmentDirections.actionTaskFragmentToTimePickerFragment(event.listItem)
+                        findNavController().navigate(action)
+                    }
+                    is TaskViewModel.TaskEvent.ShowReminderSetMessage -> {
+                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
                     }
                 }.exhaustive
             }
@@ -183,6 +195,7 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
             }
 
             R.id.action_alarm -> {
+                viewModel.onClockIconClick(args.listItem)
                 true
             }
             else -> super.onOptionsItemSelected(item)

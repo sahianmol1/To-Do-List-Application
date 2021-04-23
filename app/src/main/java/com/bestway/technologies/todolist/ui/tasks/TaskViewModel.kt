@@ -10,6 +10,7 @@ import com.bestway.technologies.todolist.data.Task
 import com.bestway.technologies.todolist.repositorry.TodoRepository
 import com.bestway.technologies.todolist.ui.ADD_TASK_RESULT_OK
 import com.bestway.technologies.todolist.ui.EDIT_TASK_RESULT_OK
+import com.bestway.technologies.todolist.ui.SET_REMINDER_RESULT
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.combine
@@ -92,8 +93,20 @@ class TaskViewModel @ViewModelInject constructor(
         }
     }
 
+    fun onSetTimerResult(result: Int) = viewModelScope.launch {
+        when(result) {
+            SET_REMINDER_RESULT -> {
+                taskEventChannel.send(TaskEvent.ShowReminderSetMessage("Reminder is set"))
+            }
+        }
+    }
+
     fun onDeleteAllCompletedClick() = viewModelScope.launch {
         taskEventChannel.send(TaskEvent.NavigateToDeleteAllCompletedClick)
+    }
+
+    fun onClockIconClick(listItem: ListItem) = viewModelScope.launch {
+        taskEventChannel.send(TaskEvent.NavigateToTimePickerFragment(listItem))
     }
 
     sealed class TaskEvent {
@@ -102,5 +115,7 @@ class TaskViewModel @ViewModelInject constructor(
         data class ShowTaskSavedConfirmationMessage(val msg: String): TaskEvent()
         object NavigateToAddTaskScreen: TaskEvent()
         object NavigateToDeleteAllCompletedClick: TaskEvent()
+        data class NavigateToTimePickerFragment(val listItem: ListItem): TaskEvent()
+        data class ShowReminderSetMessage(val msg: String): TaskEvent()
     }
 }
