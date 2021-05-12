@@ -113,17 +113,17 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
                     }
 
                     is TaskViewModel.TaskEvent.NavigateToAddTaskScreen -> {
-                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(null, "Add Task", listId = listId)
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskDialogFragment(null, "Add Task", listId = listId)
                         findNavController().navigate(action)
                     }
 
                     is TaskViewModel.TaskEvent.NavigateToEditTaskScreen -> {
-                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskFragment(event.task, "Edit Task", listId = listId)
+                        val action = TaskFragmentDirections.actionTaskFragmentToAddEditTaskDialogFragment(event.task, "Edit Task", listId = listId)
                         findNavController().navigate(action)
                     }
 
                     is TaskViewModel.TaskEvent.ShowTaskSavedConfirmationMessage -> {
-                        Snackbar.make(requireView(), event.msg, Snackbar.LENGTH_SHORT).show()
+
                     }
 
                     is TaskViewModel.TaskEvent.NavigateToDeleteAllCompletedClick -> {
