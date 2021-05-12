@@ -14,13 +14,13 @@ interface TaskDao {
                 SortOrder.BY_OLDEST -> {getOldestFirst(searchQuery, hideCompleted, listId)}
             }
 
-    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, name")
+    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, completed, name")
     fun getTasksSortedByName(searchQuery: String, hideCompleted: Boolean, listId: Int): Flow<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, created DESC")
+    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, completed, created DESC")
     fun getTasksSortedByDate(searchQuery: String, hideCompleted: Boolean, listId: Int): Flow<List<Task>>
 
-    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, created")
+    @Query("SELECT * FROM task_table WHERE (completed != :hideCompleted OR completed = 0) AND name LIKE '%' || :searchQuery || '%' AND listId = :listId ORDER BY important DESC, completed, created")
     fun getOldestFirst(searchQuery: String, hideCompleted: Boolean, listId: Int): Flow<List<Task>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
