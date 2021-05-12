@@ -25,7 +25,7 @@
         android:gravity="center_vertical"
         android:maxLines="1"
         android:textSize="16sp"
-        android:textColor="@color/black"
+        android:textColor="?android:attr/textColorPrimary"
         tools:text="Example item" />
 
     <ImageView

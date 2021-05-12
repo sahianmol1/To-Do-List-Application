@@ -18,8 +18,6 @@ class AddListItemDialogFragment : DialogFragment() {
     private val viewModel: AddListItemViewModel by viewModels()
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-
-
         val customDialogView = layoutInflater.inflate(R.layout.layout_list_add_dialog, null)
         val editText = customDialogView.findViewById<TextInputEditText>(R.id.text_input_add_list)
 

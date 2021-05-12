@@ -17,7 +17,8 @@
             android:id="@+id/text_input_add_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/backgroundColor"
+            android:textColor="?android:attr/textColorPrimary"
             android:inputType="textCapSentences"
             android:hint="@string/enter_list_name" />
     </com.google.android.material.textfield.TextInputLayout>
