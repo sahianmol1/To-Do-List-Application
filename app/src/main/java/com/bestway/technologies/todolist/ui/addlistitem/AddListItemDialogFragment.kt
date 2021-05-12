@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.bestway.technologies.todolist.R
 import com.bestway.technologies.todolist.data.ListItem
 import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ class AddListItemDialogFragment : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val customDialogView = layoutInflater.inflate(R.layout.layout_list_add_dialog, null)
         val editText = customDialogView.findViewById<TextInputEditText>(R.id.text_input_add_list)
+        val editTextLabel = customDialogView.findViewById<TextInputLayout>(R.id.text_input_label)
 
         val alertDialog = AlertDialog.Builder(requireContext())
             .setTitle("Add New List")
@@ -55,7 +57,7 @@ class AddListItemDialogFragment : DialogFragment() {
                         }
                     }
                     is AddListItemViewModel.AddListItemEvent.ShowInvalidInputMessage -> {
-                        editText.error = event.message
+                        editTextLabel.error = event.message
                     }
                 }
             }
