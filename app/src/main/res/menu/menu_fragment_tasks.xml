@@ -33,10 +33,16 @@
     </item>
 
     <item
-        android:id="@+id/action_alarm"
-        android:title="Set Alarm"
-        android:icon="@drawable/ic_baseline_access_alarm_24"
+        android:id="@+id/action_share"
+        android:title="Share"
+        android:icon="@drawable/ic_baseline_share_24"
         app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_alarm"
+        android:title="Set Reminder"
+        android:icon="@drawable/ic_baseline_access_alarm_24"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_hide_completed_tasks"

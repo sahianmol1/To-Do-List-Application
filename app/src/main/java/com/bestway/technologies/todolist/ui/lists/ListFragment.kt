@@ -1,6 +1,7 @@
 package com.bestway.technologies.todolist.ui.lists
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
@@ -20,17 +21,19 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClickListener {
+class ListFragment : Fragment(R.layout.fragment_list), ListAdapter.OnListItemClickListener {
 
     private val viewModel: ListViewModel by viewModels()
     lateinit var searchView: SearchView
     lateinit var toBeDeletedListItem: ListItem
+    private lateinit var binding: FragmentListBinding
+    private lateinit var listAdapter: ListAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentListBinding.bind(view)
+        binding = FragmentListBinding.bind(view)
 
-        val listAdapter = ListAdapter(this)
+        listAdapter = ListAdapter(this)
 
         binding.apply {
             recyclerViewLists.layoutManager = LinearLayoutManager(requireContext())
@@ -42,9 +45,14 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
             }
         }
 
+        setHasOptionsMenu(true)
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch {
             viewModel.list.observe(viewLifecycleOwner) {
-                when(it.isEmpty()) {
+                when (it.isEmpty()) {
                     true -> {
                         binding.apply {
                             textViewStartAddingList.visibility = View.VISIBLE
@@ -64,31 +72,45 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
 
         viewLifecycleOwner.lifecycleScope.launchWhenStarted {
             viewModel.listEvent.collect { event ->
-                when(event) {
+                when (event) {
                     is ListViewModel.ListEvent.NavigateToTaskFragmentScreen -> {
-                        val action = ListFragmentDirections.actionListFragmentToTaskFragment(event.list, event.list.name)
+                        val action = ListFragmentDirections.actionListFragmentToTaskFragment(
+                            event.list,
+                            event.list.name
+                        )
                         findNavController().navigate(action)
                     }
                     is ListViewModel.ListEvent.ShowDeleteAlertDialog -> {
                         val deleteAlertDialog = AlertDialog.Builder(requireContext())
-                                .setTitle("Confirm Delete")
-                                .setMessage("Are you sure? Deleting the list will delete all of its tasks.")
-                                .setPositiveButton("DELETE") {_,_ ->
-                                    viewModel.onDeleteButtonClick(event.list)
-                                }
-                                .setNegativeButton("CANCEL", null)
-                                .create()
+                            .setTitle("Confirm Delete")
+                            .setMessage("Are you sure? Deleting the list will delete all of its tasks.")
+                            .setPositiveButton("DELETE") { _, _ ->
+                                viewModel.onDeleteButtonClick(event.list)
+                            }
+                            .setNegativeButton("CANCEL", null)
+                            .create()
                         deleteAlertDialog.show()
                     }
                     is ListViewModel.ListEvent.OpenAddListItemDialog -> {
                         val action = ListFragmentDirections.actionGlobalAddListItemDialogFragment()
                         findNavController().navigate(action)
                     }
+                    is ListViewModel.ListEvent.ShareTasksOfList -> {
+                        viewModel.getAllTasks(event.list.listId).collect { tasks ->
+                            val sendIntent = Intent()
+                            sendIntent.action = Intent.ACTION_SEND
+                            var allTask = ""
+                            for (task in tasks) {
+                                allTask += " - ${task.name} \n"
+                            }
+                            sendIntent.putExtra(Intent.EXTRA_TEXT, allTask)
+                            sendIntent.type = "text/plain"
+                            startActivity(sendIntent)
+                        }
+                    }
                 }.exhaustive
             }
         }
-
-        setHasOptionsMenu(true)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -109,7 +131,7 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_sort_by_name -> {
                 viewModel.onSortOrderSelected(SortOrder.BY_NAME)
                 true
@@ -143,15 +165,23 @@ class ListFragment: Fragment(R.layout.fragment_list), ListAdapter.OnListItemClic
         registerForContextMenu(view)
     }
 
-    override fun onCreateContextMenu(menu: ContextMenu, v: View, menuInfo: ContextMenu.ContextMenuInfo?) {
+    override fun onCreateContextMenu(
+        menu: ContextMenu,
+        v: View,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
         super.onCreateContextMenu(menu, v, menuInfo)
-        activity?.menuInflater?.inflate(R.menu.menu_delete_list, menu)
+        activity?.menuInflater?.inflate(R.menu.menu_long_click_on_list, menu)
     }
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.action_delete_list -> {
                 viewModel.onDeleteMenuClick(toBeDeletedListItem)
+                true
+            }
+            R.id.action_share_list -> {
+                viewModel.onShareClick(toBeDeletedListItem)
                 true
             }
             else -> super.onContextItemSelected(item)

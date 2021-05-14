@@ -14,9 +14,9 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
 class ListViewModel @ViewModelInject constructor(
-        private val repository: TodoRepository,
-        private val preferencesManager: ListPreferencesManager,
-        @Assisted private val state: SavedStateHandle
+    private val repository: TodoRepository,
+    private val preferencesManager: ListPreferencesManager,
+    @Assisted private val state: SavedStateHandle
 ) : ViewModel() {
 
     val searchQuery = state.getLiveData("searchQuery", "")
@@ -26,9 +26,9 @@ class ListViewModel @ViewModelInject constructor(
     val listEvent = listEventChannel.receiveAsFlow()
 
     private val listFlow = combine(
-            searchQuery.asFlow(),
-            preferencesFlow
-    ) {searchQuery, sortOrder ->
+        searchQuery.asFlow(),
+        preferencesFlow
+    ) { searchQuery, sortOrder ->
         Pair(searchQuery, sortOrder)
     }.flatMapLatest { (searchQuery, sortOrder) ->
         repository.getAllListItems(searchQuery, sortOrder)
@@ -43,6 +43,7 @@ class ListViewModel @ViewModelInject constructor(
     sealed class ListEvent {
         data class NavigateToTaskFragmentScreen(val list: ListItem) : ListEvent()
         data class ShowDeleteAlertDialog(val list: ListItem) : ListEvent()
+        data class ShareTasksOfList(val list: ListItem) : ListEvent()
         object OpenAddListItemDialog : ListEvent()
     }
 
@@ -58,7 +59,13 @@ class ListViewModel @ViewModelInject constructor(
         listEventChannel.send(ListEvent.ShowDeleteAlertDialog(list))
     }
 
+    fun onShareClick(list: ListItem) = viewModelScope.launch {
+        listEventChannel.send(ListEvent.ShareTasksOfList(list))
+    }
+
     fun onSortOrderSelected(sortOrder: SortOrder) = viewModelScope.launch {
         preferencesManager.updateSortOrder(sortOrder)
     }
+
+    fun getAllTasks(listId: Int) = repository.getAllTasks("", SortOrder.BY_DATE, false, listId)
 }

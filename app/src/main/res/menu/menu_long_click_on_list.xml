@@ -7,4 +7,9 @@
         android:title="delete"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_share_list"
+        android:title="@string/share"
+        app:showAsAction="never" />
+
 </menu>

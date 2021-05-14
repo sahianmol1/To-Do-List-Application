@@ -1,5 +1,6 @@
 package com.bestway.technologies.todolist.ui.tasks
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -34,12 +35,14 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
     private val viewModel: TaskViewModel by viewModels()
     lateinit var searchView: SearchView
     private val args: TaskFragmentArgs by navArgs()
+    private lateinit var listOfTasks: List<Task>
+    var listId: Int = 0
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTasksBinding.bind(view)
 
-        val listId = args.listItem.listId
+        listId = args.listItem.listId
 
         val taskAdapter = TasksAdapter(this)
 
@@ -84,7 +87,7 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
 
         lifecycleScope.launch {
             viewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-
+                listOfTasks = tasks
                 when (tasks.isEmpty()) {
                     true -> {
                         binding.apply {
@@ -140,6 +143,7 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
                 }.exhaustive
             }
         }
+
 
         setHasOptionsMenu(true)
     }
@@ -197,6 +201,19 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
             R.id.action_alarm -> {
                 viewModel.onClockIconClick(args.listItem)
                 true
+            }
+
+            R.id.action_share -> {
+                    val sendIntent = Intent()
+                    sendIntent.action = Intent.ACTION_SEND
+                    var allTask = ""
+                    for (task in listOfTasks) {
+                        allTask += " - ${task.name} \n"
+                    }
+                    sendIntent.putExtra(Intent.EXTRA_TEXT, allTask)
+                    sendIntent.type = "text/plain"
+                    startActivity(sendIntent)
+                false
             }
             else -> super.onOptionsItemSelected(item)
         }
