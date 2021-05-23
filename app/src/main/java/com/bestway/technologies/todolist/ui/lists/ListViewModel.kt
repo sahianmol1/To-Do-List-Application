@@ -2,7 +2,10 @@ package com.bestway.technologies.todolist.ui.lists
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
+import androidx.lifecycle.viewModelScope
 import com.bestway.technologies.todolist.data.ListItem
 import com.bestway.technologies.todolist.data.ListPreferencesManager
 import com.bestway.technologies.todolist.data.SortOrder
@@ -31,10 +34,10 @@ class ListViewModel @ViewModelInject constructor(
     ) { searchQuery, sortOrder ->
         Pair(searchQuery, sortOrder)
     }.flatMapLatest { (searchQuery, sortOrder) ->
-        repository.getAllListItems(searchQuery, sortOrder)
+        repository.getAllListItems(searchQuery, SortOrder.BY_DATE)
     }
 
-    val list = listFlow.asLiveData()
+    val list = listFlow
 
     fun onListItemClick(list: ListItem) = viewModelScope.launch {
         listEventChannel.send(ListEvent.NavigateToTaskFragmentScreen(list))

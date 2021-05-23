@@ -53,10 +53,10 @@ class ListAdapter(private val listener: OnListItemClickListener) : androidx.recy
 
     class DiffCallBack : DiffUtil.ItemCallback<ListItem>() {
         override fun areItemsTheSame(oldItem: ListItem, newItem: ListItem): Boolean =
-                oldItem.listId == newItem.listId
+            oldItem.listId == newItem.listId
 
         override fun areContentsTheSame(oldItem: ListItem, newItem: ListItem): Boolean =
-                oldItem == newItem
+            oldItem == newItem
     }
 
     interface OnListItemClickListener {

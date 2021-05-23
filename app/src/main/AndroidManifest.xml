@@ -12,6 +12,10 @@
         android:theme="@style/SplashScreenTheme">
         <activity
             android:name=".ui.MainActivity"
+            android:label="@string/title_activity_lists_drawer"
+            android:theme="@style/SplashScreenTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.lists.ListsDrawerActivity"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

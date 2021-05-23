@@ -34,4 +34,6 @@ class TodoRepository @Inject constructor(private val taskDao: TaskDao, private v
     suspend fun getTopListItem() = listDao.getTopListItem()
 
     suspend fun getListItem(listId: Int) = listDao.getListItem(listId)
+
+//    suspend fun getTopMostList(listId: Int) = taskDao.getTopMostList(listId)
 }

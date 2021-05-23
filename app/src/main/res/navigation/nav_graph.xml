@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/listFragment">
+    app:startDestination="@id/taskFragment">
 
     <fragment
         android:id="@+id/taskFragment"
@@ -12,10 +12,13 @@
         tools:layout="@layout/fragment_tasks">
         <argument
             android:name="listItem"
-            app:argType="com.bestway.technologies.todolist.data.ListItem" />
+            app:argType="com.bestway.technologies.todolist.data.ListItem"
+            app:nullable="true"
+            android:defaultValue="@null" />
         <argument
             android:name="title"
-            app:argType="string" />
+            app:argType="string"
+            android:defaultValue="untitled" />
         <action
             android:id="@+id/action_taskFragment_to_timePickerFragment"
             app:destination="@id/timePickerFragment" />
@@ -30,15 +33,6 @@
     <action
         android:id="@+id/action_global_deleteAllCompletedDialogFragment"
         app:destination="@id/deleteAllCompletedDialogFragment" />
-    <fragment
-        android:id="@+id/listFragment"
-        android:name="com.bestway.technologies.todolist.ui.lists.ListFragment"
-        android:label="My Lists"
-        tools:layout="@layout/fragment_list" >
-        <action
-            android:id="@+id/action_listFragment_to_taskFragment"
-            app:destination="@id/taskFragment" />
-    </fragment>
     <dialog
         android:id="@+id/addListItemDialogFragment"
         android:name="com.bestway.technologies.todolist.ui.addlistitem.AddListItemDialogFragment"
@@ -74,4 +68,8 @@
             android:name="listId"
             app:argType="integer" />
     </dialog>
+    <activity
+        android:id="@+id/hilt_ListsDrawerActivity"
+        android:name="com.bestway.technologies.todolist.ui.lists.Hilt_ListsDrawerActivity"
+        android:label="Hilt_ListsDrawerActivity" />
 </navigation>

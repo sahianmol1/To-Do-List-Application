@@ -3,4 +3,18 @@
     <string name="groceries">Groceries</string>
     <string name="enter_list_name">Enter List Name</string>
     <string name="share">Share</string>
+    <string name="title_activity_lists_drawer">ListsDrawer</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="labelToDoList">To Do List</string>
+    <string name="add_new">Add New</string>
+    <string name="create_a_new_list">Create a new list</string>
 </resources>

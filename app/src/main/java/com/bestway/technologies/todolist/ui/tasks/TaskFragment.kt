@@ -42,7 +42,7 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentTasksBinding.bind(view)
 
-        listId = args.listItem.listId
+        listId = args.listItem?.listId ?: 0
 
         val taskAdapter = TasksAdapter(this)
 
@@ -144,7 +144,6 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
             }
         }
 
-
         setHasOptionsMenu(true)
     }
 
@@ -199,7 +198,7 @@ class TaskFragment : Fragment(R.layout.fragment_tasks), TasksAdapter.OnItemClick
             }
 
             R.id.action_alarm -> {
-                viewModel.onClockIconClick(args.listItem)
+                args.listItem?.let { viewModel.onClockIconClick(it) }
                 true
             }
 

@@ -109,6 +109,11 @@ class TaskViewModel @ViewModelInject constructor(
         taskEventChannel.send(TaskEvent.NavigateToTimePickerFragment(listItem))
     }
 
+//    suspend fun getTopMostList(listId: Int) =
+//        repository.getTopMostList(listId)
+
+    suspend fun getTopmostListItem() = repository.getTopListItem()
+
     sealed class TaskEvent {
         data class SowUndoDeleteTaskMessage(val task: Task): TaskEvent()
         data class NavigateToEditTaskScreen(val task: Task): TaskEvent()

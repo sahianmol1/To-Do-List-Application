@@ -34,4 +34,7 @@ interface TaskDao {
 
     @Query("DELETE FROM task_table WHERE completed = 1")
     suspend fun deleteAllCompleted()
+
+//    @Query("SELECT * From task_table WHERE listId = :listId")
+//    fun getTopMostList(listId: Int): Flow<List<Task>>
 }
